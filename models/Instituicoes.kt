@@ -18,6 +18,7 @@ date class Instituicoes (
     val configuracoes: String,
     val criadoEm: Instant = Instant.now(),
     val atualizadoEm: Instant? = null
+
 )
 
 // (ObjectId)
