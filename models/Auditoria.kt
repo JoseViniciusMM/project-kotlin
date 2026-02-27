@@ -1,3 +1,5 @@
+import java.time.Instant
+
 date class Auditoria (
     val id: String? = null,
     val instituicaoId: String? = null,
