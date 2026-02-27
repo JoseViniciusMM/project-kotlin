@@ -1,3 +1,9 @@
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+import java.time.Instant
+
+
+@Serializable
 date class Instituicoes (
     val id: String,
     val nome: String,
