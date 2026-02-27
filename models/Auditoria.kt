@@ -1,5 +1,8 @@
+import kotlinx.serialization.Serializable
 import java.time.Instant
 
+
+@Serializable
 date class Auditoria (
     val id: String? = null,
     val instituicaoId: String? = null,

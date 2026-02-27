@@ -7,8 +7,11 @@ data class QrCode(
     val ativo: Boolean,
     val createdAt: Instant = Instant.now(),
     val updatedAt: Instant = Instant.now(),
-)
+    )
 
+fun main() {
+
+}
 // (ObjectId)
 // (ObjectId)
 // (string) – Valor aleatório
