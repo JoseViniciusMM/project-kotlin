@@ -15,12 +15,3 @@ date class Auditoria (
     val criadoEm: Instant? = null
 )
 
-
-// (ObjectId)
-// (ObjectId)
-// (ObjectId)
-// (string)
-// (string)
-// (ObjectId | null)
-// (object | null)
-// (datetime)

@@ -29,14 +29,3 @@ enum class Atendimento (
 
 
 
-// (ObjectId)
-// (ObjectId) – Instituição proprietária da fila
-// (string) – Nome da fila
-// (string) – Online, presencial ou híbrido
-// (boolean)
-// (boolean)
-// (object | null)
-// (datetime)
-// (datetime)
-
-

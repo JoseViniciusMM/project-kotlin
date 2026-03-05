@@ -2,7 +2,6 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.time.Instant
 
-
 @Serializable
 date class Instituicoes (
     val id: String,
@@ -26,10 +25,3 @@ date class Instituicoes (
     val atualizadoEm: Instant? = null
 
 )
-
-// (ObjectId)
-// (string) – Nome oficial da instituição
-// (boolean) – Indica se a instituição está ativa
-// (object) – Configurações institucionais específicas
-// (datetime)
-// (datetime)

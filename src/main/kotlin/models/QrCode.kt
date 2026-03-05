@@ -15,11 +15,8 @@ data class QrCode(
     val updatedAt: Instant = Instant.now(),
     )
 
-fun main() {
-
+enum class {
+    LEGAL,
+    FIDELIDADE,
+    CRONOLÓGICA,
 }
-// (ObjectId)
-// (ObjectId)
-// (string) – Valor aleatório
-// (datetime)
-// (datetime)

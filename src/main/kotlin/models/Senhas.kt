@@ -31,12 +31,3 @@ enum class Status (
 
 
 
-// (ObjectId)
-// (ObjectId)
-// (ObjectId)
-// (ObjectId)
-// (number)
-// (string) – Aguardando, em atendimento, cancelada, finalizada
-// (string | null)
-// (datetime)
-// (datetime)
