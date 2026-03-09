@@ -4,28 +4,40 @@ import java.time.Instant
 
 
 @Serializable
-data class Filas (
+data class Fila (
     val id: String? = null,
-    val instituicaoId: String? = null,
+    val instituicaoId: String,
     val nome: String,
-    val tipoAtendimento: Set<Atendimento>,
-    val ativa: Boolean,
-    val prioridadesHabilitadas: Boolean,
-    val fidelidadeHabilitada: Boolean
-    val tempoMaximoAtendimento: Number
-    val configuracaoQRCode:
-    val prioridadesHabilitadas: Boolean,
-    val configuracaoQRCode: String? = null,
-    val criadoEm: Instant = Instant.now(),
-    val atualizadoEm: Instant? = null
+    val tipoAtendimento: Atendimento,
+    val ativa: Boolean = true,
+    val prioridadesHabilitadas: Boolean = false,
+    val fidelidadeHabilitada: Boolean = false,
+    val tempoMaximoAtendimento: ConfiguracaoQRCode? = null,
+    val configuracaoQRCode: ConfiguracaoQRCode? = null,
+    val mesas: List<Mesa> = emptyList(),
+    @Contextual val criadoEm: Instant = Instant.now(),
+    @Contextual val atualizadoEm: Instant? = null
 
+)
+
+@Serializable
+data class ConfiguracaoQRCode (
+    val modoQRCode: String = "ROTATIVO",
+    val tempoExibicaoMinutos: Int? = null,
+    val tempoExpiracaoMinutos: Int? = null,
+    val toleranciaMinutos: Int? = null,
+    val tempoAlertaSegundos: Int? = null
+)
+
+@Serializable
+data class Mesa (
+    val numero: String,
+    val nome: String? = null,
+    val ativa: Boolean = true
 )
 
 enum class Atendimento (
-    ONLINE
-    PRESENCIAL
-    HIBRIODO
+    ONLINE,
+    PRESENCIAL,
+    HIBRIDO
 )
-
-
-
