@@ -5,18 +5,12 @@ import java.time.Instant
 
 @Serializable
 data class QrCode(
-    val id: String,
-    val filaId: String? = null,
+    val id: String? = null,
+    val filaId: String,
     val codigo: String,
-    val validoAte: Instant = Instant.now(),
-    val toleranciaAte: Instant? = null,
-    val ativo: Boolean,
-    val createdAt: Instant = Instant.now(),
-    val updatedAt: Instant = Instant.now(),
-    )
-
-enum class {
-    LEGAL,
-    FIDELIDADE,
-    CRONOLÓGICA,
-}
+    @Contextual val validoAte: Instant,
+    @Contextual val toleranciaAte: Instant,
+    val ativo: Boolean = true,
+    @Contextual val createdAt: Instant = Instant.now(),
+    @Contextual val updatedAt: Instant = Instant? = null
+)

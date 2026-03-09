@@ -46,24 +46,24 @@ data class StatisticItem(
 
 
 @Serializable
-data class FeatureSection {
+data class FeatureSection (
     val titulo: String,
     val subtitulo: String,
     val itens: List<String>
-}
+)
 
 @Serializable
-data class FaqItem {
+data class FaqItem (
     val question: String,
     val answer: String
-}
+)
 
 @Serializable
-data class CtaSection {
+data class CtaSection (
     val titulo: String,
     val descricao: String,
     val botoes: List<String>
-}
+)
 
 @Serializable
 data class Footer(

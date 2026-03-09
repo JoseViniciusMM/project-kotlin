@@ -36,8 +36,8 @@ data class Mesa (
     val ativa: Boolean = true
 )
 
-enum class Atendimento (
+enum class Atendimento {
     ONLINE,
     PRESENCIAL,
     HIBRIDO
-)
+}
