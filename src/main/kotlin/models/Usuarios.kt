@@ -32,6 +32,6 @@ enum class Papel {
 }
 
 enum class Instituicao (
-    ADMIN-INSTITUICAO,
+    ADMIN_INSTITUICAO,
     OPERADOR
 )
