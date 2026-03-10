@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/project-kotlin.iml" filepath="$PROJECT_DIR$/project-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/API-KOTLIN.iml" filepath="$PROJECT_DIR$/.idea/modules/API-KOTLIN.iml" group="API-KOTLIN" />
     </modules>
   </component>
 </project>

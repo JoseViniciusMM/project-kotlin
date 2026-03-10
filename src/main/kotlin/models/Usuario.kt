@@ -31,7 +31,7 @@ enum class Papel {
     USUARIO_FINAL
 }
 
-enum class Instituicao (
+enum class Instituicao {
     ADMIN_INSTITUICAO,
     OPERADOR
-)
+}

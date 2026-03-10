@@ -14,24 +14,33 @@ class QrCodeRepositoryImpl (
         return collection.findOne(QrCode::codigo eq codigo)
    }
 
-   override fun findAll() {
+   override fun findAll(page: Int, limit: Int, filters: Map<String, Any?>): Pair<List<QrCode>, Long> {
+        val bsonFilters = buildFilters(filters)
+        val query = if (bsonFilters.isNotEmpty()) and(bsonFilters) else "{}"
+        val total = collection.countDocuments(query as org.bson.conversions.Bson)
+        val docs = collection.find(query)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .toList()
+            
+     return Pair(docs, total)
 
+   override fun findAtivoByFilaId(filaId: String): QrCode? {
+        return collection.findOne(and(QrCode::filaId eq filaId, QrCode::ativo eq true))
    }
 
-   override fun findAtivoByFilaId() {
-
+   override fun insert(qrCode: QrCode): QrCode {
+        collection.insertOne(qrCode)
+        return qrCode
    }
 
-   override fun insert() {
-
-   }
-
-   override fun desativar() {
-
+   override fun desativar(id: String): Boolean {
+        val result = collection.updateOneById(id, Updates.set(QrCode::ativo, false))
+        return result.modifiedCount > 0
    }
 
     private fun buildFilters () {
-
+        //falta fazer o build dos filtros
     }
 
 }
