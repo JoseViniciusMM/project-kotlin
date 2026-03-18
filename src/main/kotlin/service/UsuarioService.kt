@@ -16,7 +16,8 @@ class UsuarioService(
 
         val criado = usuarioRepository.insert(usuario)
         auditoriaService.registrar(AcaoAuditoria.CRIAR, "Usuario", criado.id, criadorId)
-        enviarEmailBoasVindas(criado)             // (2) privado
+        enviarEmailBoasVindas(criado)
+        privete val int>r// (2) privado
 
         return criado
     }

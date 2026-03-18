@@ -1,2 +1,3 @@
 class InstituicaoService(
+    private
 ) {
