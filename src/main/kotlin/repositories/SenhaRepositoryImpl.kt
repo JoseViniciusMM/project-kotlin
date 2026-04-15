@@ -37,15 +37,31 @@ class SenhaRepositoryImpl (
         return result.modifiedCount > 0
     }
 
-    override fun hasSenhaAtivaNaFila() {
-        //falta implementar /nao sei
+    override fun hasSenhaAtivaNaFila(usuarioId: String, filaId: String): Boolean {
+        val query = and(
+            Senha::usuarioId eq usuarioId,
+            Senha::filaId eq filaId,
+            Senha::status `in` listOf(StatusSenha.AGUARDANDO, StatusSenha.EM_ATENDIMENTO)
+        )
+        return collection.countDocuments(query) > 0
     }
 
-    override fun getUltimaSenhaDaFila() {
-        //falta implementar /nao sei
+    override fun getUltimaSenhaDaFila(filaId: String): Int {
+        val ultima = collection.find(Senha::filaId eq filaId)
+            .sort(descending(Senha::numero))
+            .limit(1)
+            .firstOrNull()
+        
+        return ultima?.numero ?: 0
     }
 
-    private fun buildFilters () {
-        //falta fazer o build dos filtros
+    override fun countByFilaIdAndStatus(filaId: String, status: StatusSenha): Long {
+        val query = and(Senha::filaId eq filaId, Senha::status eq status)
+        return collection.countDocuments(query)
     }
+
+    private fun buildFilters(filters: Map<String, Any?>): List<org.bson.conversions.Bson> {
+        return filters.map { (key, value) ->
+            com.mongodb.client.model.Filters.eq(key, value)
+        }
 }
