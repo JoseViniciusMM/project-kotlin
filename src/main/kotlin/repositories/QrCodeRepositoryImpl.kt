@@ -39,9 +39,10 @@ class QrCodeRepositoryImpl (
         return result.modifiedCount > 0
    }
 
-    private fun buildFilters () {
-        //falta fazer o build dos filtros
-    }
+   private fun buildFilters(filters: Map<String, Any?>): List<org.bson.conversions.Bson> {
+        return filters.map { (key, value) ->
+            com.mongodb.client.model.Filters.eq(key, value)
+        }
 
 }
     
