@@ -15,6 +15,5 @@ class MongoConfig(
     val database: MongoDatabase = client.getDatabase(databaseName)
 
     val usuarios get() = database.getCollection<Usuario>(Constants.COLLECTION_USUARIOS)
-    val examples get() = database.getCollection<Example>(Constants.COLLECTION_EXAMPLES)
 }
 

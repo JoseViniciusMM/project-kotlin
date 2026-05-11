@@ -32,7 +32,7 @@ class JwtConfig(
             .withClaim("id", userId)
             .withClaim("papeis", papeis.map { it.name })
             .withClaim("instituicaoId", instituicaoId)
-            .withExpiresAt(Date(System.currentTimeMillis() + Constants.JWT_ACCESS_EXPIRATION_MS))
+            .withExpiresAt( Date(System.currentTimeMillis() + Constants.JWT_ACCESS_EXPIRATION_MS))
             .withIssuedAt(Date())
             .sign(algorithm)
     }

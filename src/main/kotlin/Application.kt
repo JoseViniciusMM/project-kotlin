@@ -37,7 +37,6 @@ fun Application.module() {
         usuarioRoutes()
         perfilRoutes()
         specialRoutes()
-        exampleRoutes()
     }
 }
 

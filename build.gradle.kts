@@ -2,7 +2,7 @@
 val ktor_version = "3.0.1"
 val kotlin_version = "1.9.22"
 val kmongo_version = "4.11.0"
-val koin_version = "3.5.3"
+val koin_version = "4.0.0"
 val logback_version = "1.4.14"
 
 plugins {
@@ -88,7 +88,5 @@ tasks.register<JavaExec>("seed") {
 }
 
 kotlin {
-    // Como configuramos o JAVA_HOME para o JDK 21, recomendo usar 21 aqui também
-    // Mas se quiser manter 17 para compatibilidade de servidor, funciona igual.
-    jvmToolchain(17)
+    jvmToolchain(21)
 }

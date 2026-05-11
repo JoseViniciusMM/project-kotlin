@@ -13,7 +13,6 @@ val appModule = module {
 
     // Repositories
     single<UsuarioRepository> { UsuarioRepositoryImpl(get<MongoConfig>().usuarios) }
-    single<ExampleRepository> { ExampleRepositoryImpl(get<MongoConfig>().examples) }
 
     // File Storage
     single { FileStorageService() }
@@ -25,6 +24,5 @@ val appModule = module {
     single { AuthService(get(), get(), get()) }
     single { UsuarioService(get(), get()) }
     single { PerfilService(get()) }
-    single { ExampleService(get()) }
 }
 
