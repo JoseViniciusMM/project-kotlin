@@ -1,8 +1,6 @@
-import kotlinx.serialization.Serializable
+package br.com.filacidada.dtos.request
 
-/**
- * DTOs de requisição para endpoints de perfil (§9.9).
- */
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdatePerfilRequest(

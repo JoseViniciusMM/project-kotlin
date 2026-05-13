@@ -1,14 +1,13 @@
 // 1. Alinhando as versões para a 3.0.1 (Estável e compatível com Gradle 8.5+)
 val ktor_version = "3.0.1"
-val kotlin_version = "1.9.22"
+val kotlin_version = "2.0.21"
 val kmongo_version = "4.11.0"
 val koin_version = "4.0.0"
 val logback_version = "1.4.14"
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
-    // O plugin deve acompanhar a versão das bibliotecas
+    kotlin("jvm") version "2.0.21"
+    kotlin("plugin.serialization") version "2.0.21"
     id("io.ktor.plugin") version "3.0.1"
     application
 }
@@ -37,7 +36,7 @@ dependencies {
 
     // ── Serialização ──
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // ── MongoDB (KMongo) ──
     implementation("org.litote.kmongo:kmongo:$kmongo_version")

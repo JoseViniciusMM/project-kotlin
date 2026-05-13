@@ -1,12 +1,11 @@
+package br.com.filacidada.repositories
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Updates
-import com.mongodb.client.model.Sorts
 import org.litote.kmongo.*
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.Instant
+import br.com.filacidada.models.*
 
-class SenhaRepositoryImpl ( 
+
+class SenhaRepositoryImpl(
     private val collection: MongoCollection<Senha>
 ) : SenhaRepository {
 
@@ -17,12 +16,15 @@ class SenhaRepositoryImpl (
     override fun findAll(page: Int, limit: Int, filters: Map<String, Any?>): Pair<List<Senha>, Long> {
         val bsonFilters = buildFilters(filters)
         val query = if (bsonFilters.isNotEmpty()) and(bsonFilters) else "{}"
+
+        // org.bson.conversions.Bson já é resolvido nativamente pelo KMongo se o import estiver certo
         val total = collection.countDocuments(query as org.bson.conversions.Bson)
+
         val docs = collection.find(query)
             .skip((page - 1) * limit)
             .limit(limit)
             .toList()
-            
+
         return Pair(docs, total)
     }
 
@@ -33,7 +35,8 @@ class SenhaRepositoryImpl (
 
     override fun update(id: String, updates: Map<String, Any?>): Boolean {
         val setUpdates = updates.map { (key, value) -> Updates.set(key, value) }
-        val result = collection.updateOneById(id, combine(setUpdates))
+        // Adicionado o 'Updates.' antes do combine para ele achar a função do MongoDB
+        val result = collection.updateOneById(id, Updates.combine(setUpdates))
         return result.modifiedCount > 0
     }
 
@@ -48,11 +51,11 @@ class SenhaRepositoryImpl (
 
     override fun getUltimaSenhaDaFila(filaId: String): Int {
         val ultima = collection.find(Senha::filaId eq filaId)
-            .sort(descending(Senha::numero))
+            .sort(descending(Senha::posicao))
             .limit(1)
             .firstOrNull()
-        
-        return ultima?.numero ?: 0
+
+        return ultima?.posicao ?: 0
     }
 
     override fun countByFilaIdAndStatus(filaId: String, status: StatusSenha): Long {
@@ -64,4 +67,7 @@ class SenhaRepositoryImpl (
         return filters.map { (key, value) ->
             com.mongodb.client.model.Filters.eq(key, value)
         }
+    }
+
+
 }

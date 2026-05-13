@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.litote.kmongo:kmongo-serialization-mapping:4.11.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.litote.kmongo" artifactId="kmongo-serialization-mapping" version="4.11.0" baseVersion="4.11.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.litote.kmongo/kmongo-serialization-mapping/4.11.0/55e46559942f4807119b63b0173f912c4c3c9753/kmongo-serialization-mapping-4.11.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.litote.kmongo/kmongo-serialization-mapping/4.11.0/8de4f9a6e5cb4d93c97db5a45b7be67ef8f0ef18/kmongo-serialization-mapping-4.11.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

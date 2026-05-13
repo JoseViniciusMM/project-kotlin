@@ -1,15 +1,15 @@
-// dtos/request/QrCodeRequests.kt
+package br.com.filacidada.dtos.request
+
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreateQrCodeRequest(
-    val filaId: String,          // qual fila este QR Code atende
-    val validoAte: String,       // ISO 8601 — expiração principal
-    val toleranciaAte: String    // ISO 8601 — fim da janela de tolerância
-    
+    val filaId: String,
+    val validoAte: String,
+    val toleranciaAte: String
 )
 
 @Serializable
 data class RegerarQrCodeRequest(
-    val filaId: String           // Service busca a fila, desativa QR anterior e cria novo
+    val filaId: String
 )

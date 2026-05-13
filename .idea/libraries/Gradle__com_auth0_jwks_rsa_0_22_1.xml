@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.auth0:jwks-rsa:0.22.1" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="com.auth0" artifactId="jwks-rsa" version="0.22.1" baseVersion="0.22.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.auth0/jwks-rsa/0.22.1/6da617499e4614b5c22a52cb142dfe376a9a4f00/jwks-rsa-0.22.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.auth0/jwks-rsa/0.22.1/962ef8b94e8564558a735a64d742ef12046417ab/jwks-rsa-0.22.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

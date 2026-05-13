@@ -1,11 +1,19 @@
-import io.ktor.http.*
-import io.ktor.http.content.*
+package br.com.filacidada.routes
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
 import org.koin.ktor.ext.inject
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.service.*
+import br.com.filacidada.utils.*
+import br.com.filacidada.plugins.ApiException
+import io.ktor.http.content.PartData
+import io.ktor.http.content.forEachPart
+import io.ktor.http.content.streamProvider
+import io.ktor.server.auth.authenticate
 
 /**
  * Rotas de perfil: /me, /me/senha, /me/avatar, /timezones (§9.9)

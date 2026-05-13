@@ -1,8 +1,6 @@
-import kotlinx.serialization.Serializable
+package br.com.filacidada.dtos.request
 
-/**
- * DTOs de requisição para endpoints de autenticação (§9.1 e §9.2).
- */
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginRequest(

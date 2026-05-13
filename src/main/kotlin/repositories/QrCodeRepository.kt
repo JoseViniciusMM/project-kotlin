@@ -1,3 +1,6 @@
+package br.com.filacidada.repositories
+import br.com.filacidada.models.*
+
 interface QrCodeRepository {
     fun findById(id: String): QrCode?
     fun findByCodigo(codigo: String): QrCode?

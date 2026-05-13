@@ -1,9 +1,7 @@
+package br.com.filacidada.dtos.response
+
 import kotlinx.serialization.Serializable
-
-/**
- * DTOs de resposta para endpoints de perfil (§9.9).
- */
-
+import br.com.filacidada.models.Papel
 @Serializable
 data class MeResponse(
     val id: String,
@@ -21,4 +19,3 @@ data class TimezoneResponse(
     val fusos: List<String>,
     val padrao: String
 )
-

@@ -1,10 +1,9 @@
+package br.com.filacidada.repositories
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Updates
 import org.litote.kmongo.*
+import br.com.filacidada.models.*
 
-/**
- * Implementação KMongo do repositório de Usuários.
- */
 class UsuarioRepositoryImpl(
     private val collection: MongoCollection<Usuario>
 ) : UsuarioRepository {
@@ -41,7 +40,7 @@ class UsuarioRepositoryImpl(
 
     override fun update(id: String, updates: Map<String, Any?>): Boolean {
         val setUpdates = updates.map { (key, value) -> Updates.set(key, value) }
-        val result = collection.updateOneById(id, combine(setUpdates))
+        val result = collection.updateOneById(id, Updates.combine(setUpdates))
         return result.modifiedCount > 0
     }
 
@@ -69,6 +68,4 @@ class UsuarioRepositoryImpl(
             }
         }
     }
-
 }
-

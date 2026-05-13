@@ -1,4 +1,10 @@
-// services/AuditoriaService.kt
+package br.com.filacidada.service
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.*
+import br.com.filacidada.utils.*
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -20,11 +26,11 @@ class AuditoriaService(
 
         val registro = Auditoria(
             instituicaoId = instituicaoId,
-            usuarioId     = usuarioId,
-            acao          = acao,
-            entidade      = entidade,
-            entidadeId    = entidadeId,
-            dados         = dadosJson
+            usuarioId = usuarioId?: "",
+            acao = acao,
+            entidade = entidade,
+            entidadeId = entidadeId?: "",
+            dados = dadosJson
         )
 
         auditoriaRepository.insert(registro)

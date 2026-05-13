@@ -1,7 +1,15 @@
+package br.com.filacidada.service
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.*
+import br.com.filacidada.utils.*
+
 // services/FilaService.kt
 class FilaService(
     private val filaRepository: FilaRepository,
-    private val senhaRepository: SenhaRepository,     // (para contagemSenhas)
+    private val senhaRepository: SenhaRepository,
     private val auditoriaService: AuditoriaService,
     private val webSocketManager: WebSocketManager
 ) {
@@ -28,10 +36,11 @@ class FilaService(
         instituicaoId: String,
         criadorId: String
     ): Fila {
-        // converte String → enum com mensagem clara
-        val tipoAtendimento = try {
-            Atendimento.valueOf(request.tipoAtendimento)
-        } catch (_: Exception) {
+        // Validação da String sem tentar converter para Enum (já que tipoAtendimento na Model é String)
+        val tiposValidos = setOf("ONLINE", "PRESENCIAL", "HIBRIDA")
+        val tipoAtendimento = request.tipoAtendimento.uppercase()
+
+        if (tipoAtendimento !in tiposValidos) {
             throw ApiException(400, "Tipo de atendimento inválido: ${request.tipoAtendimento}")
         }
 
@@ -48,17 +57,15 @@ class FilaService(
 
         val criada = filaRepository.insert(fila)
         auditoriaService.registrar(
-            acao          = AcaoAuditoria.CRIAR,
+            acao          = AcaoAuditoria.CRIAR.name,
             entidade      = "Fila",
-            entidadeId    = criada.id,
+            entidadeId    = criada.id ?: "",
             usuarioId     = criadorId,
             instituicaoId = instituicaoId
         )
-        webSocketManager.broadcast(
-            room  = "instituicao:$instituicaoId",
-            event = "fila:criada",
-            data  = criada
-        )
+
+        // Ajustado para o novo formato simplificado do WebSocketManager
+        webSocketManager.broadcast("instituicao:$instituicaoId", "fila:criada", criada)
         return criada
     }
 
@@ -76,29 +83,33 @@ class FilaService(
             request.prioridadesHabilitadas?.let { put("prioridadesHabilitadas", it) }
             request.fidelidadeHabilitada?.let   { put("fidelidadeHabilitada", it) }
             request.tempoMaximoAtendimento?.let { put("tempoMaximoAtendimento", it) }
+
             request.tipoAtendimento?.let {
-                val tipo = try { Atendimento.valueOf(it) }
-                    catch (_: Exception) { throw ApiException(400, "Tipo inválido: $it") }
-                put("tipoAtendimento", tipo.name)
+                val tiposValidos = setOf("ONLINE", "PRESENCIAL", "HIBRIDA")
+                val tipoFormatado = it.uppercase()
+                if (tipoFormatado !in tiposValidos) {
+                    throw ApiException(400, "Tipo inválido: $it")
+                }
+                put("tipoAtendimento", tipoFormatado)
             }
+
             request.configuracaoQRCode?.let { put("configuracaoQRCode", it.toModel()) }
             request.mesas?.let              { put("mesas", it.map { m -> m.toModel() }) }
         }
 
         filaRepository.update(id, updates)
         auditoriaService.registrar(
-            acao          = AcaoAuditoria.ATUALIZAR,
+            acao          = AcaoAuditoria.ATUALIZAR.name,
             entidade      = "Fila",
             entidadeId    = id,
             usuarioId     = editorId,
             instituicaoId = instituicaoId
         )
+
         val atualizada = buscarPorId(id)
-        webSocketManager.broadcast(
-            room  = "instituicao:$instituicaoId",
-            event = "fila:atualizada",
-            data  = atualizada
-        )
+
+        // Ajustado para o novo formato simplificado do WebSocketManager
+        webSocketManager.broadcast("instituicao:$instituicaoId", "fila:atualizada", atualizada)
         return atualizada
     }
 
@@ -106,18 +117,15 @@ class FilaService(
         buscarPorId(id)
         filaRepository.delete(id)
         auditoriaService.registrar(
-            acao          = AcaoAuditoria.DELETAR,
+            acao          = AcaoAuditoria.DELETAR.name,
             entidade      = "Fila",
             entidadeId    = id,
             usuarioId     = deletorId,
             instituicaoId = instituicaoId
         )
-        webSocketManager.broadcast(
-            room  = "instituicao:$instituicaoId",
-            event = "fila:removida",
-            data  = mapOf("filaId" to id)
-        )
-    }
+
+        // Ajustado para o novo formato simplificado do WebSocketManager
+        webSocketManager.broadcast("instituicao:$instituicaoId", "fila:removida", mapOf("filaId" to id))    }
 
     /** Usa SenhaRepository diretamente — não precisa do SenhaService inteiro */
     fun contagemSenhas(filaId: String): Map<String, Long> {
@@ -129,16 +137,16 @@ class FilaService(
     // ── Extensões de conversão DTO → Model ───────────────────────────────────
 
     private fun ConfiguracaoQRCodeRequest.toModel() = ConfiguracaoQRCode(
-        modoQRCode            = modoQRCode,
-        tempoExibicaoMinutos  = tempoExibicaoMin,
-        tempoExpiracaoMinutos = tempoExpiracaoMin,
-        toleranciaMinutos     = toleranciaMin,
-        tempoAlertaSegundos   = tempoAlertaSegundos
+        modoQRCode = this.modoQRCode ?: "ROTATIVO", // Correção: usar 'this.'
+        tempoExibicaoMin = this.tempoExibicaoMin,     // Correção: Nomes das variáveis do DTO
+        tempoExpiracaoMin = this.tempoExpiracaoMin,
+        toleranciaMin = this.toleranciaMin,
+        tempoAlertaSegundos = this.tempoAlertaSegundos
     )
 
     private fun MesaRequest.toModel() = Mesa(
-        numero = numero,
-        nome   = nome,
-        ativa  = ativa
+        numero = this.numero,
+        nome   = this.nome,
+        ativa  = this.ativa
     )
 }

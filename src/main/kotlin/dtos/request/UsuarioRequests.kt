@@ -1,8 +1,6 @@
-import kotlinx.serialization.Serializable
+package br.com.filacidada.dtos.request
 
-/**
- * DTOs de requisição para endpoints de usuários (§9.4).
- */
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreateUsuarioInstituicaoRequest(

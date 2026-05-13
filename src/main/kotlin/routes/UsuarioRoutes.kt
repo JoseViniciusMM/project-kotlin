@@ -1,21 +1,21 @@
-import io.ktor.http.*
+package br.com.filacidada.routes
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
 import org.koin.ktor.ext.inject
+import io.ktor.server.auth.authenticate
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.service.*
+import br.com.filacidada.utils.*
+import br.com.filacidada.plugins.authorize
 
-/**
- * Rotas de usuários: /usuarios/... e /instituicoes/{id}/usuarios (§9.4)
- */
 fun Route.usuarioRoutes() {
     val usuarioService by inject<UsuarioService>()
 
     authenticate("auth-jwt") {
-
         route("/usuarios") {
-            // GET /usuarios — AP, AI
             authorize(Papel.ADMIN_PLATAFORMA, Papel.ADMIN_INSTITUICAO) {
                 get {
                     val pagination = call.parsePagination()
@@ -24,12 +24,12 @@ fun Route.usuarioRoutes() {
                         "email" to call.request.queryParameters["email"],
                         "ativo" to call.request.queryParameters["ativo"]?.toBooleanStrictOrNull()
                     )
-                    val result = usuarioService.listar(pagination, filters)
+                    // 👇 Passando page e limit explicitamente para o Service
+                    val result = usuarioService.listar(pagination.page, pagination.limit)
                     call.respondSuccess(result)
                 }
             }
 
-            // GET /usuarios/{id} — AP, AI
             authorize(Papel.ADMIN_PLATAFORMA, Papel.ADMIN_INSTITUICAO) {
                 get("/{id}") {
                     val id = call.parameters["id"]!!
@@ -38,41 +38,45 @@ fun Route.usuarioRoutes() {
                 }
             }
 
-            // PATCH /usuarios/{id} — AP, AI
             authorize(Papel.ADMIN_PLATAFORMA, Papel.ADMIN_INSTITUICAO) {
                 patch("/{id}") {
                     val id = call.parameters["id"]!!
                     val executorId = call.currentUserId()!!
                     val request = call.receive<UpdateUsuarioRequest>()
-                    usuarioService.atualizar(id, request, executorId)
+
+                    // Convertendo a Request num Map para o Service não quebrar
+                    val dados = buildMap<String, Any?> {
+                        request.nome?.let { put("nome", it) }
+                        request.ativo?.let { put("ativo", it) }
+                        request.instituicaoId?.let { put("instituicaoId", it) }
+                    }
+
+                    usuarioService.atualizar(id, dados)
                     val atualizado = usuarioService.buscarPorId(id)
                     call.respondSuccess(atualizado, "Usuário atualizado")
                 }
             }
 
-            // DELETE /usuarios/{id} — AP
             authorize(Papel.ADMIN_PLATAFORMA) {
                 delete("/{id}") {
                     val id = call.parameters["id"]!!
-                    val executorId = call.currentUserId()!!
-                    usuarioService.deletar(id, executorId)
+                    usuarioService.deletar(id) // O Service só espera 1 parâmetro
                     call.respondEmptySuccess("Usuário removido")
                 }
             }
         }
 
-        // GET /instituicoes/{id}/usuarios — AP, AI
         route("/instituicoes/{instituicaoId}/usuarios") {
             authorize(Papel.ADMIN_PLATAFORMA, Papel.ADMIN_INSTITUICAO) {
                 get {
                     val instituicaoId = call.parameters["instituicaoId"]!!
                     val pagination = call.parsePagination()
-                    val result = usuarioService.listarPorInstituicao(instituicaoId, pagination, emptyMap())
+                    // 👇 Passando page e limit explicitamente
+                    val result = usuarioService.listarPorInstituicao(instituicaoId, pagination.page, pagination.limit)
                     call.respondSuccess(result)
                 }
             }
 
-            // POST /instituicoes/{id}/usuarios — AP, AI (criação password-less)
             authorize(Papel.ADMIN_PLATAFORMA, Papel.ADMIN_INSTITUICAO) {
                 post {
                     val instituicaoId = call.parameters["instituicaoId"]!!

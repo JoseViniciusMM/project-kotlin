@@ -1,12 +1,13 @@
+package br.com.filacidada.repositories
+import br.com.filacidada.models.*
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Updates
 import org.litote.kmongo.*
 
-
-class FilaRepositoryImpl ( 
+class FilaRepositoryImpl (
     private val collection: MongoCollection<Fila>
-) : FilasRepository {
-    
+) : FilaRepository {
+
     override fun findById(id: String): Fila? {
         return collection.findOneById(id)
     }
@@ -14,17 +15,19 @@ class FilaRepositoryImpl (
     override fun findAll(page: Int, limit: Int, filters: Map<String, Any?>): Pair<List<Fila>, Long> {
         val bsonFilters = buildFilters(filters)
         val query = if (bsonFilters.isNotEmpty()) and(bsonFilters) else "{}"
-        val total = collection.countDocuments(query as org.bson.conversions.Bson)    
+        val total = collection.countDocuments(query as org.bson.conversions.Bson)
         val docs = collection.find(query)
             .skip((page - 1) * limit)
             .limit(limit)
             .toList()
-            
+
         return Pair(docs, total)
     }
 
-    override fun findByInstituicaoId(instituicaoId: String) {
-      //falta implementar
+    override fun findByInstituicaoId(instituicaoId: String, page: Int, limit: Int, filters: Map<String, Any?>): Pair<List<Fila>, Long> {
+        val allFilters = filters + ("instituicaoId" to instituicaoId)
+        return findAll(page, limit, allFilters)
+    }
 
     override fun insert(fila: Fila): Fila {
         collection.insertOne(fila)
@@ -34,7 +37,7 @@ class FilaRepositoryImpl (
     override fun update(id: String, updates: Map<String, Any?>): Boolean {
         if (updates.isEmpty()) return false
         val setUpdates = updates.map { (key, value) -> Updates.set(key, value) }
-        val result = collection.updateOneById(id, combine(setUpdates))
+        val result = collection.updateOneById(id, Updates.combine(setUpdates))
         return result.modifiedCount > 0
     }
 
@@ -46,4 +49,5 @@ class FilaRepositoryImpl (
         return filters.map { (key, value) ->
             com.mongodb.client.model.Filters.eq(key, value)
         }
+    }
 }

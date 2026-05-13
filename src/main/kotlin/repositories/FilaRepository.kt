@@ -1,3 +1,6 @@
+package br.com.filacidada.repositories
+import br.com.filacidada.models.*
+
 interface FilaRepository {
     fun findById(id: String): Fila?
     fun findAll(page: Int, limit: Int, filters: Map<String, Any?> = emptyMap()): Pair<List<Fila>, Long>

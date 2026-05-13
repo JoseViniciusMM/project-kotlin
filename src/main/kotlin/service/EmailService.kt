@@ -1,8 +1,15 @@
+package br.com.filacidada.service
 import jakarta.mail.*
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
 import org.slf4j.LoggerFactory
 import java.util.Properties
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.*
+import br.com.filacidada.utils.*
 
 /**
  * Serviço de envio de e-mail via SMTP (similar ao Nodemailer).

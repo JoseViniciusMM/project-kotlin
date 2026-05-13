@@ -1,7 +1,9 @@
+package br.com.filacidada.repositories
+import br.com.filacidada.models.*
 import com.mongodb.client.MongoCollection
 import org.litote.kmongo.*
 
-class AuditoriaRepositoryImpl (
+class AuditoriaRepositoryImpl(
     private val collection: MongoCollection<Auditoria>
 ) : AuditoriaRepository {
 
@@ -9,21 +11,23 @@ class AuditoriaRepositoryImpl (
         return collection.findOneById(id)
     }
 
-    override fun findAll(page: Int, limit: Int, filters: Map<String, String?>): Pair<List<Auditoria>, Long>
-    {
+    override fun findAll(page: Int, limit: Int, filters: Map<String, Any?>): Pair<List<Auditoria>, Long> {
         val bsonFilters = buildFilters(filters)
-        val query = if (bsonFilters.isNotEmpty()) and (*bsonFilters.toTypedArray()) else null
+        val query = if (bsonFilters.isNotEmpty()) and(bsonFilters) else "{}"
+
+        // org.bson.conversions.Bson explícito para evitar erros de cast
         val total = collection.countDocuments(query as org.bson.conversions.Bson)
+
         val docs = collection.find(query)
-            .sort(descending(Auditoria::createdAt))
+            .sort(org.litote.kmongo.descending(Auditoria::dataHora))
             .skip((page - 1) * limit)
             .limit(limit)
             .toList()
-            
+
         return Pair(docs, total)
     }
 
-    override  fun insert(auditoria: Auditoria): Auditoria {
+    override fun insert(auditoria: Auditoria): Auditoria {
         collection.insertOne(auditoria)
         return auditoria
     }
@@ -32,4 +36,5 @@ class AuditoriaRepositoryImpl (
         return filters.map { (key, value) ->
             com.mongodb.client.model.Filters.eq(key, value)
         }
+    }
 }

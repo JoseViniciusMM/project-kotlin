@@ -1,33 +1,26 @@
-import kotlinx.serialization.Contextual
+package br.com.filacidada.models
+
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import br.com.filacidada.utils.InstantSerializer
 import java.time.Instant
 
 @Serializable
-data class Instituicao (
+data class Instituicao(
     val id: String? = null,
     val nome: String,
-    val cnpj: String = "",    
-    val email: String = "",
-    val telefone: String = "",
-    val responsavel: String = "",
-    val endereco: String = "",
-    val descricao: String = "",
+    val cnpj: String? = null,
+    val email: String? = null,
+    val telefone: String? = null,
+    val responsavel: String? = null,
+    val endereco: String? = null,
+    val descricao: String? = null,
+    val status: StatusInstituicao = StatusInstituicao.PENDENTE,
     val ativo: Boolean = true,
-    val status: Status = Status.PENDENTE,
+    val configuracoes: Map<String, JsonElement> = emptyMap(),
     val solicitanteId: String? = null,
-    val contratoUrl: String = "",
-    val motivoRejeicao: String = "",
     val aprovadoPor: String? = null,
-    @Contextual val aprovadoEm: Instant? = null,
-    val configuracoes: Map<String, String> = emptyMap(),
-    @Contextualval criadoEm: Instant = Instant.now(),
-    @Contextualval atualizadoEm: Instant? = null
-
+    @Serializable(with = InstantSerializer::class)
+    val aprovadoEm: Instant? = null,
+    val motivoRejeicao: String? = null
 )
-
-
-enum class Status {
-    PENDENTE,
-    APROVADA,
-    REJEITADA
-}

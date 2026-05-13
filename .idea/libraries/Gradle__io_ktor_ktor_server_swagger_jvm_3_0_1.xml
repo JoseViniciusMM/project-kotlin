@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.ktor:ktor-server-swagger-jvm:3.0.1" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.ktor" artifactId="ktor-server-swagger-jvm" version="3.0.1" baseVersion="3.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-swagger-jvm/3.0.1/4ffdb57391e1e1d8f1a3d57c7cc639f328e556e4/ktor-server-swagger-jvm-3.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-swagger-jvm/3.0.1/5481e03ef753a68b9c62ee5e1fed89ac79b23d06/ktor-server-swagger-jvm-3.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

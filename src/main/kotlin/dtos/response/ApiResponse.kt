@@ -1,14 +1,9 @@
+package br.com.filacidada.dtos.response
+
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
+import br.com.filacidada.utils.AppJson
 
-/**
- * Wrapper não-genérico para todas as respostas da API.
- *
- * O campo `data` é armazenado como JsonElement para evitar problemas de
- * serialização com tipos genéricos no Ktor + kotlinx.serialization.
- *
- * Uso: ApiResponse.success(data), ApiResponse.error("mensagem")
- */
 @Serializable
 data class ApiResponse(
     val success: Boolean,

@@ -1,4 +1,5 @@
-// dtos/request/FilaRequests.kt
+package br.com.filacidada.dtos.request
+
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.swagger.codegen.v3:swagger-codegen:3.0.63" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.swagger.codegen.v3" artifactId="swagger-codegen" version="3.0.63" baseVersion="3.0.63" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.swagger.codegen.v3/swagger-codegen/3.0.63/56a2f663c279e95c845e9fc4e0d728ab2e88bc8f/swagger-codegen-3.0.63.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.swagger.codegen.v3/swagger-codegen/3.0.63/6a14c2970721313652977eebeaf78cdd3972cb1b/swagger-codegen-3.0.63-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

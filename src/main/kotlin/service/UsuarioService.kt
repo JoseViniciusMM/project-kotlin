@@ -1,40 +1,56 @@
-class UsuarioService(
-    private val usuarioRepository: UsuarioRepository,   // (1) private
-    private val auditoriaService: AuditoriaService,     // (1) private
-    private val emailService: EmailService              // (1) private
-) {
+package br.com.filacidada.service
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.UsuarioRepository
 
-    // ── Método PÚBLICO — interface limpa ──────────────
+class UsuarioService(
+    private val usuarioRepository: UsuarioRepository,
+    private val auditoriaService: AuditoriaService,
+    private val emailService: EmailService
+) {
     fun criarParaInstituicao(
         request: CreateUsuarioInstituicaoRequest,
         instituicaoId: String,
         criadorId: String
     ): Usuario {
-        validarEmailUnico(request.email)          // (2) privado
-        val papeis = validarPapeis(request.papeis)  // (2) privado
-        val usuario = montarEntidade(request, papeis, instituicaoId) // (2)
+        if (usuarioRepository.findByEmail(request.email) != null) throw ApiException(400, "E-mail já cadastrado")
+
+        val papeis = request.papeis.map { Papel.valueOf(it) }.toSet()
+
+        val usuario = Usuario(
+            nome = request.nome,
+            email = request.email,
+            papeis = papeis,
+            instituicaoId = instituicaoId
+        )
 
         val criado = usuarioRepository.insert(usuario)
-        auditoriaService.registrar(AcaoAuditoria.CRIAR, "Usuario", criado.id, criadorId)
-        enviarEmailBoasVindas(criado)
-        privete val int>r// (2) privado
+        auditoriaService.registrar(AcaoAuditoria.CRIAR.name, "Usuario", criado.id ?: "", criadorId)
 
         return criado
     }
 
-    // ── Métodos PRIVADOS — detalhes escondidos ────────
-    private fun validarEmailUnico(email: String) {          // (3)
-        if (usuarioRepository.findByEmail(email) != null)
-            throw ApiException(400, "E-mail já cadastrado")
+    fun buscarPorId(id: String): Usuario {
+        return usuarioRepository.findById(id) ?: throw ApiException(404, "Usuário não encontrado")
     }
 
-    private fun validarPapeis(papeis: List<String>): Set<Papel> {
-        return papeis.map {
-            try { Papel.valueOf(it) }
-            catch (_: Exception) { throw ApiException(400, "Papel inválido: $it") }
-        }.toSet()
+    fun listar(page: Int, limit: Int): List<Usuario> {
+        return usuarioRepository.findAll(page, limit, emptyMap()).first
     }
 
-    private fun montarEntidade(...): Usuario { ... }
-    private fun enviarEmailBoasVindas(u: Usuario) { ... }
+    fun listarPorInstituicao(instituicaoId: String, page: Int, limit: Int): List<Usuario> {
+        return usuarioRepository.findByInstituicaoId(instituicaoId, page, limit, emptyMap()).first
+    }
+
+    fun atualizar(id: String, dados: Map<String, Any?>): Usuario {
+        usuarioRepository.update(id, dados)
+        auditoriaService.registrar(AcaoAuditoria.ATUALIZAR.name, "Usuario", id, "sistema")
+        return buscarPorId(id)
+    }
+
+    fun deletar(id: String) {
+        usuarioRepository.delete(id)
+        auditoriaService.registrar(AcaoAuditoria.DELETAR.name, "Usuario", id, "sistema")
+    }
 }

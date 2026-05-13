@@ -1,10 +1,18 @@
-import io.ktor.http.*
+package br.com.filacidada.routes
+import br.com.filacidada.config.JwtConfig
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
 import org.koin.ktor.ext.inject
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.service.*
+import br.com.filacidada.utils.*
+import br.com.filacidada.plugins.ApiException
+import io.ktor.server.auth.authenticate
 
 /**
  * Rotas de autenticação: /auth/... (§9.1 e §9.2)

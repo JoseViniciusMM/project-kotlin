@@ -1,8 +1,6 @@
-import kotlinx.serialization.Serializable
+package br.com.filacidada.dtos.response
 
-/**
- * DTOs de resposta para endpoints de autenticação (§9.1 e §9.2).
- */
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class TokenResponse(
@@ -20,4 +18,3 @@ data class IntrospectResponse(
     val iat: Long? = null,
     val nbf: Long? = null
 )
-

@@ -1,13 +1,19 @@
+package br.com.filacidada.repositories
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Updates
 import org.litote.kmongo.*
+import br.com.filacidada.models.*
 
-class InstituicaoRepositoryImpl( 
+class InstituicaoRepositoryImpl(
     private val collection: MongoCollection<Instituicao>
-) : InstituicoesRepository {
-     
+) : InstituicaoRepository {
+
     override fun findById(id: String): Instituicao? {
         return collection.findOneById(id)
+    }
+
+    override fun findByNome(nome: String): Instituicao? {
+        return collection.findOne(Instituicao::nome eq nome)
     }
 
     override fun findAll(page: Int, limit: Int, filters: Map<String, Any?>): Pair<List<Instituicao>, Long> {
@@ -18,7 +24,7 @@ class InstituicaoRepositoryImpl(
             .skip((page - 1) * limit)
             .limit(limit)
             .toList()
-            
+
         return Pair(docs, total)
     }
 
@@ -28,9 +34,9 @@ class InstituicaoRepositoryImpl(
     }
 
     override fun update(id: String, updates: Map<String, Any?>): Boolean {
-        if (updates.isEmpty()) return false 
+        if (updates.isEmpty()) return false
         val setUpdates = updates.map { (key, value) -> Updates.set(key, value) }
-        val result = collection.updateOneById(id, combine(setUpdates))
+        val result = collection.updateOneById(id, Updates.combine(setUpdates))
         return result.modifiedCount > 0
     }
 
@@ -42,4 +48,5 @@ class InstituicaoRepositoryImpl(
         return filters.map { (key, value) ->
             com.mongodb.client.model.Filters.eq(key, value)
         }
+    }
 }

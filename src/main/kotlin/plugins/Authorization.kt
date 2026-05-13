@@ -1,35 +1,24 @@
-import io.ktor.http.*
+package br.com.filacidada.plugins
+
 import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import br.com.filacidada.models.Papel
+import br.com.filacidada.utils.currentUserPapeis
+import br.com.filacidada.utils.respondError
 
-/**
- * Plugin custom de autorização por papéis.
- *
- * Uso nas rotas:
- *   authorize(Papel.ADMIN_PLATAFORMA, Papel.ADMIN_INSTITUICAO) {
- *       get("/recurso") { ... }
- *   }
- */
-fun Route.authorize(vararg papeis: Papel, build: Route.() -> Unit): Route {
-    val route = createChild(AuthorizationRouteSelector())
+class AuthorizedRouteSelector : RouteSelector() {
+    override suspend fun evaluate(context: RoutingResolveContext, segmentIndex: Int) = RouteSelectorEvaluation.Constant
+}
 
-    route.intercept(ApplicationCallPipeline.Call) {
-        val userPapeis = call.currentUserPapeis()
-        if (userPapeis.none { it in papeis }) {
-                call.respond(HttpStatusCode.Forbidden, ApiResponse.error("Acesso negado"))
+fun Route.authorize(vararg roles: Papel, build: Route.() -> Unit) {
+    val route = createChild(AuthorizedRouteSelector())
+    route.intercept(ApplicationCallPipeline.Plugins) {
+        val userRoles = call.currentUserPapeis()
+        if (userRoles.none { it in roles }) {
+            call.respondError("Acesso negado: permissões insuficientes", status = HttpStatusCode.Forbidden)
             finish()
         }
     }
-
     route.build()
-    return route
-}
-
-/**
- * Selector customizado para não interferir com o roteamento Ktor.
- */
-class AuthorizationRouteSelector : RouteSelector() {
-    override fun evaluate(context: RoutingResolveContext, segmentIndex: Int) =
-        RouteSelectorEvaluation.Transparent
 }

@@ -1,4 +1,5 @@
-// dtos/response/SenhaResponses.kt
+package br.com.filacidada.dtos.response
+
 import kotlinx.serialization.Serializable
 
 @Serializable

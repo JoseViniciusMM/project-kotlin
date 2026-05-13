@@ -1,7 +1,11 @@
+package br.com.filacidada.utils
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import kotlinx.serialization.Serializable
+
+// 👇 Imports necessários
+import br.com.filacidada.dtos.response.ApiResponse
 
 /**
  * Helper para responses padronizados que evitam problemas de serialização.
@@ -24,18 +28,12 @@ suspend inline fun ApplicationCall.respondError(
     respond(ApiResponse.error(message, errors))
 }
 
-/**
- * DTO para responses vazias (success sem dados)
- */
 @Serializable
 data class EmptyResponse(val message: String = "")
 
-/**
- * Helper para success sem dados relevantes
- */
 suspend inline fun ApplicationCall.respondEmptySuccess(
     message: String,
     status: HttpStatusCode = HttpStatusCode.OK
 ) {
-    respondSuccess(EmptyResponse(message), status = status)
+    respondSuccess(EmptyResponse(message), message, status)
 }

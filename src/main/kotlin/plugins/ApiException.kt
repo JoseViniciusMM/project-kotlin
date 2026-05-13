@@ -3,6 +3,8 @@
  *
  * Capturada pelo plugin StatusPages para gerar resposta padronizada.
  */
+package br.com.filacidada.plugins
+
 class ApiException(
     val statusCode: Int,
     override val message: String,

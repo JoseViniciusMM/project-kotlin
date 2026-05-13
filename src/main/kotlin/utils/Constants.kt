@@ -1,8 +1,9 @@
+package br.com.filacidada.utils
+
 /**
- * Constantes globais da API FilaCidadã - Em construção.
+ * Constantes globais da API FilaCidadã.
  */
 object Constants {
-
     // Colecoes MongoDB
     const val COLLECTION_USUARIOS = "usuarios"
     const val COLLECTION_INSTITUICOES = "instituicoes"
@@ -38,4 +39,3 @@ object Constants {
     const val CODIGO_RECUPERACAO_LENGTH = 4
     const val CODIGO_RECUPERACAO_EXPIRATION_MS = 30 * 60 * 1000L  // 30 minutos
 }
-

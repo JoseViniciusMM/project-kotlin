@@ -1,5 +1,12 @@
+package br.com.filacidada.service
 import java.time.Instant
 import java.time.ZoneId
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.*
+import br.com.filacidada.utils.*
 
 /**
  * Service de Perfil: me, atualizar, alterar senha, avatar, timezones.

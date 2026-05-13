@@ -1,3 +1,11 @@
+package br.com.filacidada.service
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.*
+import br.com.filacidada.utils.*
+
 // services/InstituicaoService.kt
 class InstituicaoService(
     private val instituicaoRepository: InstituicaoRepository,
@@ -35,7 +43,7 @@ class InstituicaoService(
 
         val criada = instituicaoRepository.insert(instituicao)
         auditoriaService.registrar(
-            acao          = AcaoAuditoria.CRIAR,
+            acao          = AcaoAuditoria.CRIAR.name,
             entidade      = "Instituicao",
             entidadeId    = criada.id,
             usuarioId     = criadorId,
@@ -65,7 +73,7 @@ class InstituicaoService(
 
         instituicaoRepository.update(id, updates)
         auditoriaService.registrar(
-            acao          = AcaoAuditoria.ATUALIZAR,
+            acao          = AcaoAuditoria.ATUALIZAR.name,
             entidade      = "Instituicao",
             entidadeId    = id,
             usuarioId     = editorId,
@@ -78,7 +86,7 @@ class InstituicaoService(
         buscarPorId(id)
         instituicaoRepository.delete(id)
         auditoriaService.registrar(
-            acao       = AcaoAuditoria.DELETAR,
+            acao       = AcaoAuditoria.DELETAR.name,
             entidade   = "Instituicao",
             entidadeId = id,
             usuarioId  = deletorId
@@ -107,7 +115,7 @@ class InstituicaoService(
 
         val criada = instituicaoRepository.insert(instituicao)
         auditoriaService.registrar(
-            acao       = AcaoAuditoria.CRIAR,
+            acao       = AcaoAuditoria.CRIAR.name,
             entidade   = "Instituicao",
             entidadeId = criada.id,
             usuarioId  = solicitanteId,
@@ -129,7 +137,7 @@ class InstituicaoService(
             "aprovadoEm"  to java.time.Instant.now()
         ))
         auditoriaService.registrar(
-            acao       = AcaoAuditoria.ATUALIZAR,
+            acao       = AcaoAuditoria.ATUALIZAR.name,
             entidade   = "Instituicao",
             entidadeId = id,
             usuarioId  = aprovadorId,
@@ -155,7 +163,7 @@ class InstituicaoService(
             "aprovadoEm"      to java.time.Instant.now()
         ))
         auditoriaService.registrar(
-            acao       = AcaoAuditoria.ATUALIZAR,
+            acao       = AcaoAuditoria.ATUALIZAR.name,
             entidade   = "Instituicao",
             entidadeId = id,
             usuarioId  = aprovadorId,
@@ -175,7 +183,7 @@ class InstituicaoService(
             "motivoRejeicao" to ""
         ))
         auditoriaService.registrar(
-            acao       = AcaoAuditoria.ATUALIZAR,
+            acao       = AcaoAuditoria.ATUALIZAR.name,
             entidade   = "Instituicao",
             entidadeId = id,
             usuarioId  = aprovadorId,

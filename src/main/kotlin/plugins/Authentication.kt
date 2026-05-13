@@ -1,7 +1,11 @@
+package br.com.filacidada.plugins
+import br.com.filacidada.config.JwtConfig
+import br.com.filacidada.dtos.response.ApiResponse
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import io.ktor.http.HttpStatusCode
 
 /**
  * Configuração do plugin de autenticação JWT (Ktor Auth).
@@ -18,11 +22,10 @@ fun Application.configureAuthentication(jwtConfig: JwtConfig) {
             }
             challenge { _, _ ->
                 call.respond(
-                    io.ktor.http.HttpStatusCode.Unauthorized,
+                    HttpStatusCode.Unauthorized,
                     ApiResponse.error("Token inválido ou ausente")
                 )
             }
         }
     }
 }
-

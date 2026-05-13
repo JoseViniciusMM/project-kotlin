@@ -1,7 +1,13 @@
+package br.com.filacidada.config
+
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.*
+
+// Imports essenciais para o compilador achar suas constantes e o enum Papel
+import br.com.filacidada.utils.Constants
+import br.com.filacidada.models.Papel
 
 /**
  * Configuração de geração e validação de tokens JWT.
@@ -32,7 +38,7 @@ class JwtConfig(
             .withClaim("id", userId)
             .withClaim("papeis", papeis.map { it.name })
             .withClaim("instituicaoId", instituicaoId)
-            .withExpiresAt( Date(System.currentTimeMillis() + Constants.JWT_ACCESS_EXPIRATION_MS))
+            .withExpiresAt(Date(System.currentTimeMillis() + Constants.JWT_ACCESS_EXPIRATION_MS))
             .withIssuedAt(Date())
             .sign(algorithm)
     }
@@ -59,4 +65,3 @@ class JwtConfig(
         return expiry.toInstant().toString()
     }
 }
-

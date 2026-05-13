@@ -1,7 +1,10 @@
+package br.com.filacidada.plugins
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
+import br.com.filacidada.dtos.response.ApiResponse
+import br.com.filacidada.utils.respondError
 
 /**
  * Plugin de tratamento centralizado de erros.

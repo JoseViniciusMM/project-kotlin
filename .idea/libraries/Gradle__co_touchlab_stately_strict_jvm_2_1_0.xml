@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: co.touchlab:stately-strict-jvm:2.1.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="co.touchlab" artifactId="stately-strict-jvm" version="2.1.0" baseVersion="2.1.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.touchlab/stately-strict-jvm/2.1.0/3ae8369209065455f4630793bf6aca0fb88c8b6b/stately-strict-jvm-2.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.touchlab/stately-strict-jvm/2.1.0/c8f5004cbd0cec05789a5893eddcc78826c8030/stately-strict-jvm-2.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

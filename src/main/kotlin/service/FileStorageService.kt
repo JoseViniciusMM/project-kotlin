@@ -1,5 +1,12 @@
+package br.com.filacidada.service
 import java.io.File
 import java.util.UUID
+import br.com.filacidada.models.*
+import br.com.filacidada.dtos.request.*
+import br.com.filacidada.dtos.response.*
+import br.com.filacidada.plugins.ApiException
+import br.com.filacidada.repositories.*
+import br.com.filacidada.utils.*
 
 /**
  * Service de armazenamento de arquivos em disco local.

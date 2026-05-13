@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.swagger:swagger-compat-spec-parser:1.0.71" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.swagger" artifactId="swagger-compat-spec-parser" version="1.0.71" baseVersion="1.0.71" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-compat-spec-parser/1.0.71/7d3621eb28d51a33dd3355bf1a897136a0f61116/swagger-compat-spec-parser-1.0.71.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-compat-spec-parser/1.0.71/daa0a7d9e1301723c6b7325fabd38f15096214de/swagger-compat-spec-parser-1.0.71-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

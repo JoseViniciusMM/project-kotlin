@@ -1,3 +1,6 @@
+package br.com.filacidada.repositories
+import br.com.filacidada.models.*
+
 interface SenhaRepository {
     fun findById(id: String): Senha?
     fun findAll(page: Int, limit: Int, filters: Map<String, Any?> = emptyMap()): Pair<List<Senha>, Long>
@@ -5,4 +8,5 @@ interface SenhaRepository {
     fun update(id: String, updates: Map<String, Any?>): Boolean
     fun hasSenhaAtivaNaFila(usuarioId: String, filaId: String): Boolean
     fun getUltimaSenhaDaFila(filaId: String): Int
+    fun countByFilaIdAndStatus(filaId: String, status: StatusSenha): Long
 }
