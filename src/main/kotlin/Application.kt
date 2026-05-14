@@ -1,5 +1,5 @@
 package br.com.filacidada
-
+import io.ktor.server.response.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -16,22 +16,28 @@ fun main() {
 }
 
 fun Application.module() {
-    install(Koin) {
-        modules(appModule)
-    }
-
-    val jwtConfig = JwtConfig()
-
-    configureContentNegotiation()
-    configureCORS()
-    configureAuthentication(jwtConfig)
-    configureStatusPages()
-    configureSwagger()
+//    install(Koin) {
+//        modules(appModule)
+//    }
+//
+//    val jwtConfig = JwtConfig()
+//
+//    configureContentNegotiation()
+//    configureCORS()
+//    configureAuthentication(jwtConfig)
+//    configureStatusPages()
+//    // configureSwagger()
+//
+//    routing {
+//        authRoutes()
+//        usuarioRoutes()
+//        perfilRoutes()
+//        specialRoutes()
+//    }
 
     routing {
-        authRoutes()
-        usuarioRoutes()
-        perfilRoutes()
-        specialRoutes()
+        get("/") {
+            call.respondText("🚀 Servidor Ktor da Fila Cidadã rodando perfeitamente na porta 7351!")
+        }
     }
 }
