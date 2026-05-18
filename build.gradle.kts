@@ -73,6 +73,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers:1.19.3")
     testImplementation("org.testcontainers:mongodb:1.19.3")
     testImplementation("org.testcontainers:junit-jupiter:1.19.3")
+    implementation("io.github.serpro69:kotlin-faker:1.15.0")
 }
 
 tasks.test {
