@@ -1,0 +1,357 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Fila Cidadã",
+    "version": "1.0.0",
+    "description": "API de exemplo — 31 endpoints implementados.\n\nAutentique-se com `/auth/login` para obter o Bearer token.",
+    "contact": {
+      "name": "Administrador",
+      "email": "suporte@filacidada.com.br"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:7351",
+      "description": "Servidor Local"
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Autenticação e recuperação de senha" },
+    { "name": "Usuários", "description": "Gestão de usuários" },
+    { "name": "Examples", "description": "CRUD de examples" },
+    { "name": "Perfil", "description": "Dados do usuário autenticado" },
+    { "name": "Especial", "description": "Rotas de integração e deep link" }
+  ],
+  "security": [
+    { "bearerAuth": [] }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login — obtém tokens JWT",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" },
+              "examples": {
+                "admin": { "summary": "Admin Plataforma", "value": { "email": "admin@example.com", "senha": "Admin@123" } },
+                "usuario": { "summary": "Usuário Final", "value": { "email": "cidadao@example.com", "senha": "Admin@123" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tokens gerados", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Registro de novo usuário",
+        "security": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RegisterRequest" } } } },
+        "responses": {
+          "201": { "description": "Usuário criado com tokens", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "409": { "$ref": "#/components/responses/Conflict" }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Renovar tokens",
+        "security": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "token": { "type": "string" } } } } } },
+        "responses": {
+          "200": { "description": "Novos tokens gerados", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/TokenResponse" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Encerrar sessão",
+        "responses": {
+          "200": { "description": "Logout realizado com sucesso" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/auth/introspect": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Verificar validade do token",
+        "security": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "accessToken": { "type": "string" } } } } } },
+        "responses": {
+          "200": { "description": "Status do token", "content": { "application/json": { "schema": { "type": "object", "properties": { "active": { "type": "boolean" }, "tokenType": { "type": "string" }, "exp": { "type": "integer" }, "iat": { "type": "integer" } } } } } }
+        }
+      }
+    },
+    "/auth/recover": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Solicitar recuperação de senha",
+        "description": "Em modo development, pode retornar o token e código na resposta para facilitar o teste.",
+        "security": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RecoverRequest" } } } },
+        "responses": {
+          "200": { "description": "Solicitação enviada (ou tokens retornados em dev)" }
+        }
+      }
+    },
+    "/auth/password/reset/{token}": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Redefinir senha por token",
+        "security": [],
+        "parameters": [ { "name": "token", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ResetPasswordRequest" } } } },
+        "responses": { "200": { "description": "Senha alterada" }, "400": { "$ref": "#/components/responses/BadRequest" } }
+      }
+    },
+    "/auth/password/reset/code": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Redefinir senha por código",
+        "security": [],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "codigo": { "type": "string" }, "senha": { "type": "string" } } } } } },
+        "responses": { "200": { "description": "Senha alterada" }, "400": { "$ref": "#/components/responses/BadRequest" } }
+      }
+    },
+    "/usuarios": {
+      "get": {
+        "tags": ["Usuários"],
+        "summary": "Listar todos os usuários",
+        "parameters": [
+          { "name": "nome", "in": "query", "schema": { "type": "string" } },
+          { "name": "email", "in": "query", "schema": { "type": "string" } },
+          { "name": "ativo", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } }
+        ],
+        "responses": {
+          "200": { "description": "Lista paginada", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedResponse" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/instituicoes/{instituicaoId}/usuarios": {
+      "get": {
+        "tags": ["Usuários"],
+        "summary": "Listar usuários da instituição",
+        "parameters": [
+          { "name": "instituicaoId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } }
+        ],
+        "responses": {
+          "200": { "description": "Lista paginada", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedResponse" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      },
+      "post": {
+        "tags": ["Usuários"],
+        "summary": "Criar usuário institucional",
+        "description": "Fluxo **password-less**: O usuário é criado sem senha. Ele receberá um e-mail com instruções para definir o acesso.",
+        "parameters": [ { "name": "instituicaoId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "nome": { "type": "string" }, "email": { "type": "string", "format": "email" }, "papeis": { "type": "array", "items": { "type": "string" } } } } } } },
+        "responses": {
+          "201": { "description": "Usuário criado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UsuarioResponse" } } } },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "409": { "$ref": "#/components/responses/Conflict" }
+        }
+      }
+    },
+    "/usuarios/{id}": {
+      "get": {
+        "tags": ["Usuários"],
+        "summary": "Buscar usuário por ID",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Usuário", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UsuarioResponse" } } } }, "404": { "$ref": "#/components/responses/NotFound" } }
+      },
+      "patch": {
+        "tags": ["Usuários"],
+        "summary": "Atualizar usuário",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "nome": { "type": "string" }, "papeis": { "type": "array", "items": { "type": "string" } }, "ativo": { "type": "boolean" }, "instituicaoId": { "type": "string" } } } } } },
+        "responses": { "200": { "description": "Usuário atualizado" }, "403": { "$ref": "#/components/responses/Forbidden" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      },
+      "delete": {
+        "tags": ["Usuários"],
+        "summary": "Remover usuário",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "204": { "description": "Removido com sucesso" }, "403": { "$ref": "#/components/responses/Forbidden" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/examples": {
+      "get": {
+        "tags": ["Examples"],
+        "summary": "Listar examples",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } }
+        ],
+        "responses": { "200": { "description": "Lista paginada", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedResponse" } } } }, "401": { "$ref": "#/components/responses/Unauthorized" } }
+      },
+      "post": {
+        "tags": ["Examples"],
+        "summary": "Criar example",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExampleResponse" } } } },
+        "responses": { "201": { "description": "Example criado" }, "400": { "$ref": "#/components/responses/BadRequest" } }
+      }
+    },
+    "/examples/{id}": {
+      "get": {
+        "tags": ["Examples"],
+        "summary": "Buscar example por ID",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Example encontrado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExampleResponse" } } } }, "404": { "$ref": "#/components/responses/NotFound" } }
+      },
+      "patch": {
+        "tags": ["Examples"],
+        "summary": "Atualizar example",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "nome": { "type": "string" }, "ativo": { "type": "boolean" } } } } } },
+        "responses": { "200": { "description": "Example atualizado" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      },
+      "delete": {
+        "tags": ["Examples"],
+        "summary": "Remover example",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "204": { "description": "Removido" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/examples/enum/{enumValue}": {
+      "get": {
+        "tags": ["Examples"],
+        "summary": "Filtrar por enum",
+        "parameters": [ { "name": "enumValue", "in": "path", "required": true, "schema": { "type": "string", "enum": ["EXAMPLE_ONE", "EXAMPLE_TWO", "EXAMPLE_THREE", "EXAMPLE_FOUR"] } } ],
+        "responses": { "200": { "description": "Lista filtrada" } }
+      }
+    },
+    "/examples/{id}/ativar": {
+      "patch": {
+        "tags": ["Examples"],
+        "summary": "Ativar example",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Registro ativado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExampleResponse" } } } }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/examples/{id}/desativar": {
+      "patch": {
+        "tags": ["Examples"],
+        "summary": "Desativar example",
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "Registro desativado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ExampleResponse" } } } }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": ["Perfil"],
+        "summary": "Retornar perfil do usuário logado",
+        "responses": { "200": { "description": "Dados do perfil", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UsuarioResponse" } } } }, "401": { "$ref": "#/components/responses/Unauthorized" } }
+      },
+      "patch": {
+        "tags": ["Perfil"],
+        "summary": "Atualizar perfil",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "nome": { "type": "string" }, "email": { "type": "string", "format": "email" }, "fusoHorario": { "type": "string" } } } } } },
+        "responses": { "200": { "description": "Perfil atualizado" }, "409": { "$ref": "#/components/responses/Conflict" } }
+      }
+    },
+    "/me/senha": {
+      "patch": {
+        "tags": ["Perfil"],
+        "summary": "Alterar senha",
+        "description": "Requisitos de complexidade: Mínimo 8 caracteres, pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial.",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "senhaAtual": { "type": "string" }, "novaSenha": { "type": "string" } } } } } },
+        "responses": { "200": { "description": "Senha alterada" }, "400": { "$ref": "#/components/responses/BadRequest" } }
+      }
+    },
+    "/me/avatar": {
+      "post": {
+        "tags": ["Perfil"],
+        "summary": "Upload de avatar",
+        "description": "Aceita arquivos multipart/form-data. Máximo 50 MB. Tipos aceitos: JPEG, PNG, WebP, GIF.",
+        "requestBody": { "required": true, "content": { "multipart/form-data": { "schema": { "type": "object", "properties": { "avatar": { "type": "string", "format": "binary" } } } } } },
+        "responses": { "200": { "description": "Avatar atualizado" }, "400": { "$ref": "#/components/responses/BadRequest" } }
+      },
+      "delete": {
+        "tags": ["Perfil"],
+        "summary": "Remover avatar",
+        "responses": { "200": { "description": "Avatar removido" }, "404": { "$ref": "#/components/responses/NotFound" } }
+      }
+    },
+    "/timezones": {
+      "get": {
+        "tags": ["Perfil"],
+        "summary": "Listar fusos horários suportados",
+        "security": [],
+        "responses": {
+          "200": { "description": "Fusos suportados", "content": { "application/json": { "schema": { "type": "object", "properties": { "data": { "type": "object", "properties": { "fusos": { "type": "array", "items": { "type": "string" } }, "padrao": { "type": "string", "example": "America/Manaus" } } } } } } } }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": ["Especial"],
+        "summary": "Health check da API",
+        "security": [],
+        "responses": { "200": { "description": "Status OK", "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "string", "example": "ok" } } } } } } }
+      }
+    },
+    "/.well-known/assetlinks.json": {
+      "get": {
+        "tags": ["Especial"],
+        "summary": "Android App Links",
+        "description": "Retorna o JSON array exigido pela Google para o deep linking nativo do aplicativo `br.com.filacidada`.",
+        "security": [],
+        "responses": { "200": { "description": "Arquivo AssetLinks servido com sucesso" } }
+      }
+    },
+    "/r/{codigo}": {
+      "get": {
+        "tags": ["Especial"],
+        "summary": "Redirect para deep link",
+        "security": [],
+        "parameters": [ { "name": "codigo", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "302": { "description": "Found redirecionando para o frontend" }, "400": { "$ref": "#/components/responses/BadRequest" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "BadRequest": { "description": "Requisição inválida (Erro 400)" },
+      "Unauthorized": { "description": "Token inválido ou ausente (Erro 401)" },
+      "Forbidden": { "description": "Acesso negado: permissões insuficientes (Erro 403)" },
+      "NotFound": { "description": "Recurso não encontrado (Erro 404)" },
+      "Conflict": { "description": "Conflito com recurso existente (Erro 409)" }
+    },
+    "schemas": {
+      "LoginRequest": { "type": "object", "required": ["email", "senha"], "properties": { "email": { "type": "string", "format": "email" }, "senha": { "type": "string" } } },
+      "RegisterRequest": { "type": "object", "required": ["nome", "email", "senha"], "properties": { "nome": { "type": "string" }, "email": { "type": "string", "format": "email" }, "senha": { "type": "string" } } },
+      "RecoverRequest": { "type": "object", "required": ["email"], "properties": { "email": { "type": "string", "format": "email" } } },
+      "ResetPasswordRequest": { "type": "object", "required": ["senha"], "properties": { "senha": { "type": "string" } } },
+      "TokenResponse": { "type": "object", "properties": { "accessToken": { "type": "string" }, "refreshToken": { "type": "string" }, "expiraEm": { "type": "integer" } } },
+      "PaginatedResponse": { "type": "object", "properties": { "docs": { "type": "array", "items": { "type": "object" } }, "totalDocs": { "type": "integer" }, "limit": { "type": "integer" }, "totalPages": { "type": "integer" }, "page": { "type": "integer" }, "hasPrevPage": { "type": "boolean" }, "hasNextPage": { "type": "boolean" } } },
+      "UsuarioResponse": { "type": "object", "properties": { "id": { "type": "string" }, "nome": { "type": "string" }, "email": { "type": "string", "format": "email" }, "papeis": { "type": "array", "items": { "type": "string" } }, "ativo": { "type": "boolean" }, "createdAt": { "type": "string", "format": "date-time" } } },
+      "ExampleResponse": { "type": "object", "properties": { "id": { "type": "string" }, "nome": { "type": "string" }, "email": { "type": "string", "format": "email" }, "enumExample": { "type": "array", "items": { "type": "string", "enum": ["EXAMPLE_ONE", "EXAMPLE_TWO", "EXAMPLE_THREE", "EXAMPLE_FOUR"] } }, "ativo": { "type": "boolean" }, "createdAt": { "type": "string", "format": "date-time" } } }
+    }
+  }
+}
