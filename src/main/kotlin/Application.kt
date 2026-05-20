@@ -1,5 +1,5 @@
 package br.com.filacidada
-import io.ktor.server.response.*
+
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -16,28 +16,32 @@ fun main() {
 }
 
 fun Application.module() {
-//    install(Koin) {
-//        modules(appModule)
-//    }
-//
-//    val jwtConfig = JwtConfig()
-//
-//    configureContentNegotiation()
-//    configureCORS()
-//    configureAuthentication(jwtConfig)
-//    configureStatusPages()
-//    // configureSwagger()
-//
-//    routing {
-//        authRoutes()
-//        usuarioRoutes()
-//        perfilRoutes()
-//        specialRoutes()
-//    }
+    // 1. Liga o Koin (Injeção de dependências e MongoDB)
+    install(Koin) {
+        modules(appModule)
+    }
 
+    val jwtConfig = JwtConfig()
+
+    // 2. Configurações gerais
+    configureContentNegotiation()
+    configureCORS()
+    configureAuthentication(jwtConfig)
+    configureStatusPages()
+
+    // 3. Liga o Swagger (já contém o redirecionamento da raiz "/")
+    configureSwagger()
+
+    // 4. Agrupa TODAS as suas rotas em um único bloco
     routing {
-        get("/") {
-            call.respondText("🚀 Servidor Ktor da Fila Cidadã rodando perfeitamente na porta 7351!")
-        }
+        authRoutes()
+        usuarioRoutes()
+        perfilRoutes()
+        specialRoutes()
+
+        // Adicione estas linhas se você já tiver os arquivos de rota criados:
+        // exampleRoutes()
+        // filaRoutes()
+        // instituicaoRoutes()
     }
 }

@@ -14,7 +14,7 @@ fun Application.configureSwagger() {
         get("/") {
             call.respondRedirect("/api-docs")
         }
-        swaggerUI(path = "api-docs", swaggerFile = "openapi/documentation.json") {
+        swaggerUI(path = "api-docs", swaggerFile = "src/main/resources/openapi/documentation.json") {
             version = "5.17.14"
         }
     }
