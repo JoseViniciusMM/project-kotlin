@@ -37,6 +37,15 @@ fun Route.authRoutes() {
             call.respondSuccess(token, "Usuário registrado", HttpStatusCode.Created)
         }
 
+        // 4c. Extensão de funcionalidade: Reenvio de e-mail de confirmação
+        post("/resend-confirmation") {
+            val request = call.receive<Map<String, String>>()
+            val email = request["email"] ?: return@post call.respond(HttpStatusCode.BadRequest, "E-mail obrigatório")
+
+            authService.resendConfirmation(email)
+            call.respond(HttpStatusCode.OK, "Se o e-mail existir, uma nova confirmação foi enviada.")
+        }
+
         // POST /auth/refresh — público
         post("/refresh") {
             val request = call.receive<RefreshRequest>()

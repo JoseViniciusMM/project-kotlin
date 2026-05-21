@@ -38,10 +38,10 @@ fun Application.module() {
         usuarioRoutes()
         perfilRoutes()
         specialRoutes()
-
-        // Adicione estas linhas se você já tiver os arquivos de rota criados:
-        // exampleRoutes()
-        // filaRoutes()
-        // instituicaoRoutes()
+        instituicaoRoutes()
+        filaRoutes()
+        landingPageRoutes()
+        qrCodeRoutes()
+        senhaRoutes()
     }
 }

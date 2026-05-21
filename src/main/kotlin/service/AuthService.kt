@@ -39,6 +39,10 @@ class AuthService(
         return TokenResponse(accessToken, refreshToken, jwtConfig.accessTokenExpiresAt())
     }
 
+    fun resendConfirmation(email: String) {
+        // TODO: Implementar busca do usuário e disparo de e-mail
+    }
+
     fun register(request: RegisterRequest): TokenResponse {
         if (usuarioRepository.findByEmail(request.email) != null)
             throw ApiException(409, "E-mail já cadastrado")
